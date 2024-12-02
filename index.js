@@ -76,6 +76,8 @@ const createChainProxy = element => {
       return attrCb;
     },
   });
+  
+  return proxy;
 };
 
 
