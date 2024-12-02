@@ -54,8 +54,8 @@ const createChainProxy = element => {
 
       const methodCb = (...attrs) => {
         const result = element[property](...attrs);
-        if (forceReturnProxy) return proxy;
-        if (forceReturnResult) return result;
+        if (forceReturnProxy.test(property)) return proxy;
+        if (forceReturnResult.test(property)) return result;
         return result ? result : proxy;
       };
 
@@ -83,7 +83,7 @@ const createChainProxy = element => {
       return attrCb;
     },
   });
-  
+
   return proxy;
 
   return proxy;
