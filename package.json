@@ -1,0 +1,13 @@
+{
+  "name": "svg-chain",
+  "version": "1.0.0",
+  "description": "SVG mini-lib with chaining like jQuery",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED"
+}
