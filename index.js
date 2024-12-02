@@ -1,25 +1,28 @@
 /** @format */
 
-
-/** 
- * Creates a proxy object that wraps the provided DOM element and provides a chainable API for interacting with it. 
- * The proxy handles various types of property access, including attributes, 
- * styles, and methods, and returns the proxy object itself or the result of the operation, 
+/**
+ * Creates a proxy object that wraps the provided DOM element and provides a chainable API for interacting with it.
+ * The proxy handles various types of property access, including attributes,
+ * styles, and methods, and returns the proxy object itself or the result of the operation,
  * depending on the property being accessed.
-*/
+ */
 const createChainProxy = element => {
   const convertCamelCaseToProps = name =>
     name.replace(/(?<=[a-z0-9])[A-Z](?=[a-z0-9])/g, char => `-${char.toLowerCase()}`);
 
-  const forceReturnProxy = /(?:^(?:add|remove|toggle|set|scroll|replace|attach))|append|prepend|before|after|(?:Child$)|/;
+  const forceReturnProxy =
+    /(?:^(?:add|remove|toggle|set|scroll|replace|attach))|append|prepend|before|after|(?:Child$)/;
   const forceReturnResult = /(?:^get)|(?:^has)|(?:^check)|(?:querySelector(?:All)?)|(?:^request)/;
-  const forceAttr = /d|r|[xy][12]|[crfd][xy]|offset|(?:^area)|(?:^data)|(?:^on\w+)/;
+  const forceAttr = /^(?:(?:d|r|[xy][12]|[crfd][xy]|offset)$)|(?:^area)|(?:^data)|(?:^on\w+)/;
   const backwardMethod = /^(append|prepend|before|after)To$/;
 
   const proxy = new Proxy(element, {
     get(element, property) {
       if (property === 'self') {
         return element;
+      }
+      if (property === 'classList') {
+        return element.classList;
       }
 
       let match;
@@ -35,7 +38,7 @@ const createChainProxy = element => {
 
       const attrCb = (value = null) => {
         if (value !== null) {
-          element.setProperty(convertCamelCaseToProps(property), value);
+          element.setAttribute(convertCamelCaseToProps(property), value);
           return proxy;
         }
         return element.getAttribute(convertCamelCaseToProps(property));
@@ -63,13 +66,17 @@ const createChainProxy = element => {
         }
         return element.style[property];
       };
-
+      console.log(1, property);
       if (forceAttr.test(property)) {
         return attrCb;
       }
+      console.log(2, property in element);
       if (property in element) {
+        console.log(property, element[property], typeof element[property]);
         return typeof element[property] === 'function' ? methodCb : propertyCb;
       }
+      console.log(3, property in element.style);
+
       if (property in element.style) {
         return styleCb;
       }
@@ -78,9 +85,9 @@ const createChainProxy = element => {
   });
   
   return proxy;
+
+  return proxy;
 };
-
-
 /**
  * Creates a new SVG element and wraps it in a proxy object for chaining method calls.
  * @param {string} element - The name of the SVG element to create.
