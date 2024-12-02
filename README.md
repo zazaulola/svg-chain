@@ -18,7 +18,7 @@ You can use it for
       .fill('transparent')
       .className('frame')
       .addEventListener('mouseover',(e)=>e.target.classList.add('hover'))
-      .addEventListener('mouseoout',(e)=>e.target.classList.remove('hover'))
+      .addEventListener('mouseout',(e)=>e.target.classList.remove('hover'))
       .onclick('alert("click")')
       .appendTo('svg')
 
