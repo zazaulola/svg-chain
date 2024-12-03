@@ -13,7 +13,7 @@ const createChainProxy = element => {
   const forceReturnProxy =
     /(?:^(?:add|remove|toggle|set|scroll|replace|attach))|append|prepend|before|after|(?:Child$)/;
   const forceReturnResult = /(?:^get)|(?:^has)|(?:^check)|(?:querySelector(?:All)?)|(?:^request)/;
-  const forceAttr = /^(?:(?:d|r|[xy][12]|[crfd][xy]|offset)$)|(?:^area)|(?:^data)|(?:^on\w+)/;
+  const forceAttr = /^(?:(?:d|r|[xy][12]?|[crfd][xy]|offset|width|height)$)|(?:^area)|(?:^data)|(?:^on\w+)/;
   const backwardMethod = /^(append|prepend|before|after)To$/;
 
   const proxy = new Proxy(element, {
@@ -66,16 +66,16 @@ const createChainProxy = element => {
         }
         return element.style[property];
       };
-      console.log(1, property);
+      // console.log(1, property);
       if (forceAttr.test(property)) {
         return attrCb;
       }
-      console.log(2, property in element);
+      // console.log(2, property in element);
       if (property in element) {
-        console.log(property, element[property], typeof element[property]);
+        // console.log(property, element[property], typeof element[property]);
         return typeof element[property] === 'function' ? methodCb : propertyCb;
       }
-      console.log(3, property in element.style);
+      // console.log(3, property in element.style);
 
       if (property in element.style) {
         return styleCb;
